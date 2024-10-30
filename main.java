@@ -290,10 +290,10 @@ public void recoitJeton(int couleur) {
     jetonsGagnes[couleur] = true;  // Marque le jeton comme gagné
     statsJetons[couleur]++;
     System.out.println(pseudo + " reçoit un jeton de couleur " + couleurEnLettres(couleur));
-    resetGrille();   // Réinitialise la grille pour repartir à zéro
+    videGrille();   // Réinitialise la grille pour repartir à zéro
 }
 
-public void resetGrille() {
+public void videGrille() {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             grille[i][j] = 0;
