@@ -200,6 +200,7 @@ class Joueur {
         }
     }
 
+    
 private int choixCouleurIA(int[] couleurs) {
     int couleur1 = couleurs[0];
     int couleur2 = couleurs[1];
@@ -216,8 +217,8 @@ private int choixCouleurIA(int[] couleurs) {
 public void tourJeuIA(Joueur adversaire) {
     System.out.println("C'est au tour de " + pseudo + " (IA).");
 
-    int[] couleurs = tirageCouleur();           // l'IA reçoit deux couleurs
-    int choix = choixCouleurIA(couleurs);       // Choisit une couleur de façon intteligente (les choix randoms... impossible de perdre contre l'IA)
+    int[] couleurs = tirageCouleur();           // IA reçoit deux couleurs
+    int choix = choixCouleurIA(couleurs);       // Choisit une couleur intelligente
     int[] coordonnees = choixCoordonneesIA(choix); // Choisit une position stratégique
 
     grille[coordonnees[0]][coordonnees[1]] = choix;
@@ -244,7 +245,8 @@ private int[] choixCoordonneesIA(int couleur) {
         }
     }
 
-// Choix aléatoire si aucun alignement direct n'est trouvé
+        // Choix aléatoire si aucun alignement direct n'est trouvé
+
      Random rand = new Random();
     int ligne, colonne;
     do {
