@@ -113,7 +113,7 @@ public class Main {
     }
 
     public static void jouerPartie(Joueur joueur1, Joueur joueur2, boolean modeIA) {
-        System.out.println("Début de la partie !");
+        System.out.println("Debut de la partie !");
         System.out.println(" ");
         System.out.println("Grille du joueur 1 ");
         joueur1.afficherGrille();
