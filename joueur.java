@@ -75,10 +75,17 @@ class Joueur {
         }
     }
 
-    private int choixCouleurIA(int[] couleurs) {
-        if (!jetonBleu) return couleurs[0];
-        return couleurs[1];
-    }
+private int choixCouleurIA(int[] couleurs) {
+    // l'IA choisit en priorité une couleur d'un jeton qu'elle ne possède pas
+    if (!jetonBleu && (couleurs[0] == 1 || couleurs[1] == 1)) return 1;
+    if (!jetonVert && (couleurs[0] == 2 || couleurs[1] == 2)) return 2;
+    if (!jetonJaune && (couleurs[0] == 3 || couleurs[1] == 3)) return 3;
+    if (!jetonRouge && (couleurs[0] == 4 || couleurs[1] == 4)) return 4;
+
+    // Par défaut, elle choisira la 1re couleur proposée
+    return couleurs[0];
+}
+
 
     public int[] placeCouleur(int couleur) {
         if (estOrdinateur) {
@@ -108,17 +115,66 @@ class Joueur {
         }
     }
 
-    private int[] placeCouleurIA(int couleur) {
-        Random rand = new Random();
-        int ligne, colonne;
-        do {
-            ligne = rand.nextInt(4);
-            colonne = rand.nextInt(4);
-        } while (grille[ligne][colonne] != 0);
-        grille[ligne][colonne] = couleur;
-        nbreVides--;
-        return new int[]{ligne, colonne};
+private int[] placeCouleurIA(int couleur) {
+    // Tentative de trouver une case libre proche d'un pion de même couleur pour faciliter un alignement
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (grille[i][j] == 0 && caseFavorisantAlignement(i, j, couleur)) {
+                grille[i][j] = couleur;
+                nbreVides--;
+                return new int[]{i, j};
+            }
+        }
     }
+
+    // Si aucune case stratégique n'est trouvée, elle place son pion dans une case libre aléatoirement
+    Random rand = new Random();
+    int ligne, colonne;
+    do {
+        ligne = rand.nextInt(4);
+        colonne = rand.nextInt(4);
+    } while (grille[ligne][colonne] != 0);
+    grille[ligne][colonne] = couleur;
+    nbreVides--;
+    return new int[]{ligne, colonne};
+}
+
+// Méthode auxiliaire pour vérifier si le placement est stratégique
+private boolean caseFavorisantAlignement(int ligne, int colonne, int couleur) {
+    int totalAligne = 0;
+
+    // l'IA vérifie les lignes pour compter les pions des mêmes couleurs
+    for (int j = 0; j < 4; j++) {
+        if (grille[ligne][j] == couleur) totalAligne++;
+    }
+    if (totalAligne >= 2) return true;
+
+    // l'IA vérfie les colonnes 
+    totalAligne = 0;
+    for (int i = 0; i < 4; i++) {
+        if (grille[i][colonne] == couleur) totalAligne++;
+    }
+    if (totalAligne >= 2) return true;
+
+    // l'IA vérifie les diagonales
+    if (ligne == colonne) { // Diagonale principale
+        totalAligne = 0;
+        for (int d = 0; d < 4; d++) {
+            if (grille[d][d] == couleur) totalAligne++;
+        }
+        if (totalAligne >= 2) return true;
+    }
+    if (ligne + colonne == 3) { // Diagonale secondaire
+        totalAligne = 0;
+        for (int d = 0; d < 4; d++) {
+            if (grille[d][3 - d] == couleur) totalAligne++;
+        }
+        if (totalAligne >= 2) return true;
+    }
+
+    return false;
+}
+
 
     public boolean verifAligne(int[] coordonnees) {
         int ligne = coordonnees[0], colonne = coordonnees[1], couleur = grille[ligne][colonne];
