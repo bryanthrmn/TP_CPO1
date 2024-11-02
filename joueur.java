@@ -217,20 +217,29 @@ private boolean caseFavorisantAlignement(int ligne, int colonne, int couleur) {
         }
     }
 
-    public void tourJeu(Joueur adversaire) {
-        System.out.println("C'est au tour de " + pseudo);
-        int[] couleurs = tirageCouleurs();
-        int couleur = choixCouleur(couleurs);
-        int[] position = placeCouleur(couleur);
+public void tourJeu(Joueur adversaire) {
+    System.out.println("C'est au tour de " + pseudo);
 
-        if (verifAligne(position)) {
-            recoitJeton(couleur);
-            System.out.println("Felicitations, " + pseudo + " a aligne 4 pions " + couleurEnLettres(couleur) + " et gagne un jeton " + couleurEnLettres(couleur) + " !");
-            System.out.println(" ");
-            videGrille();
-        }
-        afficherGrille();
+    // Si la grille est pleine sans alignement, on la vide pour continuer le jeu
+    if (nbreVides == 0) {
+        System.out.println(pseudo + " a rempli la grille sans alignement. Reinitialisation de la grille.");
+        System.out.println(" ");
+        videGrille();
     }
+
+    int[] couleurs = tirageCouleurs();
+    int couleur = choixCouleur(couleurs);
+    int[] position = placeCouleur(couleur);
+
+    if (verifAligne(position)) {
+        recoitJeton(couleur);
+        System.out.println("Felicitations, " + pseudo + " a aligne 4 pions " + couleurEnLettres(couleur) + " et gagne un jeton " + couleurEnLettres(couleur) + " !");
+        System.out.println(" ");
+        videGrille();
+    }
+    afficherGrille();
+}
+
 
 public void tourJeuIA(Joueur adversaire) {
     System.out.println("C'est au tour de l'" + pseudo + ".");
