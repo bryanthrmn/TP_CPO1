@@ -8,10 +8,6 @@ package tp1;
 import java.util.Random;
 import java.util.Scanner;
 
-/**
- *
- * @author Bryan
- */
 class Joueur {
     private final String pseudo;
     private final int[][] grille = new int[4][4];
