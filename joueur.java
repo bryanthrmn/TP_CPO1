@@ -8,12 +8,12 @@ package tp1;
 import java.util.Random;
 import java.util.Scanner;
 
+
 class Joueur {
     private final String pseudo;
     private final int[][] grille = new int[4][4];
     private boolean jetonBleu, jetonVert, jetonJaune, jetonRouge;
     private int nbreVides = 16;
-    private final int nbgrilles = 0; // Nouveau champ pour compter les grilles utilisées
     private final boolean estOrdinateur;
 
     public Joueur(String pseudo) {
@@ -83,33 +83,52 @@ private int choixCouleurIA(int[] couleurs) {
 }
 
 
-    public int[] placeCouleur(int couleur) {
-        if (estOrdinateur) {
-            return placeCouleurIA(couleur);
-        } else {
-            Scanner sc = new Scanner(System.in);
-            int ligne = 0, colonne = 0;
-            while (true) {
-                System.out.println("Entrez une position (XY ; avec X une lettre entre A et D - Y un chiffre entre 1 et 4):");
-                String coordonnee = sc.next();
-                if (coordonnee.equalsIgnoreCase("stop") || coordonnee.equalsIgnoreCase("quit")) {
-                    System.out.println("La partie a ete interrompue.");
-                    System.out.println(" ");
-                    System.exit(0);
+public int[] placeCouleur(int couleur) {
+    if (estOrdinateur) {
+        return placeCouleurIA(couleur);
+    } else {
+        Scanner sc = new Scanner(System.in);
+        int ligne = 0, colonne = 0;
+        while (true) {
+            System.out.println("Entrez une position (XY ; avec X une lettre entre A et D - Y un chiffre entre 1 et 4):");
+            String coordonnee = sc.next();
+            
+            // Ferme le jeu si "stop" ou "quit" est tapé
+            if (coordonnee.equalsIgnoreCase("stop") || coordonnee.equalsIgnoreCase("quit")) { 
+                System.out.println("La partie a ete interrompue.");
+                System.out.println(" ");
+                System.exit(0);
             }
-                ligne = coordonnee.charAt(0) - 'A';
-                colonne = coordonnee.charAt(1) - '1';
-                if (ligne >= 0 && ligne < 4 && colonne >= 0 && colonne < 4 && grille[ligne][colonne] == 0) {
-                    break;
+
+            // Vérifie que l'entrée est exactement de longueur 2
+            if (coordonnee.length() == 2) {
+                char ligneChar = coordonnee.charAt(0);
+                char colonneChar = coordonnee.charAt(1);
+                
+                // Vérifie que le premier caractère est une lettre entre 'A' et 'D' et le second est entre '1' et '4'
+                if (ligneChar >= 'A' && ligneChar <= 'D' && colonneChar >= '1' && colonneChar <= '4') {
+                    ligne = ligneChar - 'A';
+                    colonne = colonneChar - '1';
+                    
+                    // Vérifie si la case est vide
+                    if (grille[ligne][colonne] == 0) {
+                        break; // Sortie de la boucle si l'entrée est valide
+                    } else {
+                        System.out.println("Position invalide ou case deja utilisee, veuillez reessayer.");
+                    }
                 } else {
-                    System.out.println("Position invalide ou case deja utilisee, veuillez reessayer.");
+                    System.out.println("Erreur : Position invalide ou case deja utilisee. Entrez une lettre entre A et D suivie d'un chiffre entre 1 et 4.");
                 }
+            } else {
+                System.out.println("Format incorrect. Entrez une lettre entre A et D suivie d'un chiffre entre 1 et 4.");
             }
-            grille[ligne][colonne] = couleur;
-            nbreVides--;
-            return new int[]{ligne, colonne};
         }
+        grille[ligne][colonne] = couleur;
+        nbreVides--;
+        return new int[]{ligne, colonne};
     }
+}
+
 
 private int[] placeCouleurIA(int couleur) {
     // Tentative de trouver une case libre proche d'un pion de même couleur pour faciliter un alignement
@@ -123,7 +142,7 @@ private int[] placeCouleurIA(int couleur) {
         }
     }
 
-    // Si aucune case stratégique n'est trouvée, elle place son pion dans une case libre aléatoirement
+    // Si aucune case stratégique n'est trouvée, elle place son pion dans une case libre de façon aléatoire
     Random rand = new Random();
     int ligne, colonne;
     do {
@@ -135,7 +154,7 @@ private int[] placeCouleurIA(int couleur) {
     return new int[]{ligne, colonne};
 }
 
-// Méthode auxiliaire pour vérifier si le placement est stratégique
+// On vérifie si le placement est stratégique
 private boolean caseFavorisantAlignement(int ligne, int colonne, int couleur) {
     int totalAligne = 0;
 
